@@ -17,7 +17,7 @@ app.add_middleware(
 )
 
 
-token = os.getenv('github_API_key')
+TOKEN = os.getenv('github_API_key')
 
 
 @app.get("/profile/")
@@ -37,7 +37,7 @@ async def get_profile(request: Request):
         'description',
     ]
     HEADERS = {
-        'Authorization': f'token {token}'
+        'Authorization': f'token {TOKEN}'
     }
     
     params = request.query_params
