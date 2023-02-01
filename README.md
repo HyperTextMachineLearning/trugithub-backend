@@ -1,5 +1,7 @@
 # trugithub-backend
 
+For any queries ping me at dev.ritik.matere@gmail.com
+
 ## Prerequisites
 
 You need python version of `3.8` and above.
