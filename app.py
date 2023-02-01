@@ -36,14 +36,19 @@ async def get_profile(request: Request):
         'html_url',
         'description',
     ]
-
+    HEADERS = {
+        'Authorization': f'token {token}', 
+        'Access-Control-Allow-Origin': '*'
+    }
+    
     params = request.query_params
         
     repos_url = f"https://api.github.com/users/{params['username']}/repos?per_page=9"
+    
     try:
         page_no = params['page']
         repos_url = repos_url + "&page=" + page_no
-        repos = requests.get(url=repos_url, headers={'Authorization': f'token {token}'})
+        repos = requests.get(url=repos_url, headers=HEADERS)
         repos_list = repos.json()
         revised_repos = []
         for repo in repos_list:
@@ -53,7 +58,7 @@ async def get_profile(request: Request):
                 revised_repo[key] = repo[key]
 
             # Obtain languages->enlist->insert them
-            l = requests.get(url=repo['languages_url'], headers={'Authorization': f'token {token}'})
+            l = requests.get(url=repo['languages_url'], headers=HEADERS)
             revised_repo['languages'] = list(l.json())
             revised_repos.append(revised_repo)
 
@@ -62,14 +67,14 @@ async def get_profile(request: Request):
         pass
 
     # repos is of Type Response[]
-    repos = requests.get(url=repos_url, headers={'Authorization': f'token {token}'})
+    repos = requests.get(url=repos_url, headers=HEADERS)
 
     # Submitted username not found or contains invalid characters like space
     if repos.status_code == 404:
         return json.dumps({'message': 'Invalid User'})
 
     user_details_url = f"https://api.github.com/users/{params['username']}"
-    user_details = requests.get(url=user_details_url, headers={'Authorization': f'token {token}'})
+    user_details = requests.get(url=user_details_url, headers=HEADERS)
     user_details = user_details.json() # Convert user_details from JSON to dict
 
     # Prepare trimmed down object for user details
@@ -88,7 +93,7 @@ async def get_profile(request: Request):
             revised_repo[key] = repo[key]
 
         # Obtain languages->enlist->insert them
-        l = requests.get(url=repo['languages_url'], headers={'Authorization': f'token {token}'})
+        l = requests.get(url=repo['languages_url'], headers=HEADERS)
         revised_repo['languages'] = list(l.json())
         
         revised_repos.append(revised_repo)
