@@ -16,12 +16,49 @@ app.add_middleware(
 )
 
 
-token = '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'
+token = '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'
+
 
 @app.get("/profile/")
 async def get_profile(request: Request):
+    REQUIRED_DETAILS_KEYS = [
+        'avatar_url',
+        'name',
+        'location',
+        'bio',
+        'twitter_username',
+        'html_url',
+        'public_repos'
+    ]
+    REQUIRED_REPO_KEYS = [
+        'name',
+        'html_url',
+        'description',
+    ]
+
     params = request.query_params
+        
     repos_url = f"https://api.github.com/users/{params['username']}/repos?per_page=9"
+    try:
+        page_no = params['page']
+        repos_url = repos_url + "&page=" + page_no
+        repos = requests.get(url=repos_url, headers={'Authorization': f'token {token}'})
+        repos_list = repos.json()
+        revised_repos = []
+        for repo in repos_list:
+            revised_repo = {}
+
+            for key in REQUIRED_REPO_KEYS:
+                revised_repo[key] = repo[key]
+
+            # Obtain languages->enlist->insert them
+            l = requests.get(url=repo['languages_url'], headers={'Authorization': f'token {token}'})
+            revised_repo['languages'] = list(l.json())
+            revised_repos.append(revised_repo)
+
+        return json.dumps(revised_repos)
+    except KeyError:
+        pass
 
     # repos is of Type Response[]
     repos = requests.get(url=repos_url, headers={'Authorization': f'token {token}'})
@@ -34,33 +71,19 @@ async def get_profile(request: Request):
     user_details = requests.get(url=user_details_url, headers={'Authorization': f'token {token}'})
     user_details = user_details.json() # Convert user_details from JSON to dict
 
-    required_details_keys = [
-        'avatar_url',
-        'name',
-        'location',
-        'bio',
-        'twitter_username',
-        'html_url',
-    ]
-
     # Prepare trimmed down object for user details
     final_user_details = {}
-    for key in required_details_keys:
+    for key in REQUIRED_DETAILS_KEYS:
         final_user_details[key] = user_details[key]
 
 
     # repos_list is of type dict[]
     repos_list = repos.json()
-    required_repo_keys = [
-        'name',
-        'html_url',
-        'description',
-    ]
     revised_repos = []
     for repo in repos_list:
         revised_repo = {}
 
-        for key in required_repo_keys:
+        for key in REQUIRED_REPO_KEYS:
             revised_repo[key] = repo[key]
 
         # Obtain languages->enlist->insert them
