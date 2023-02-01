@@ -37,8 +37,7 @@ async def get_profile(request: Request):
         'description',
     ]
     HEADERS = {
-        'Authorization': f'token {token}', 
-        'Access-Control-Allow-Origin': '*'
+        'Authorization': f'token {token}'
     }
     
     params = request.query_params
@@ -79,7 +78,6 @@ async def get_profile(request: Request):
 
     # Prepare trimmed down object for user details
     final_user_details = {}
-    print(f'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA {user_details}')
     for key in REQUIRED_DETAILS_KEYS:
         final_user_details[key] = user_details[key]
 
