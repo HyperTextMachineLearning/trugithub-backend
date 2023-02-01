@@ -79,6 +79,7 @@ async def get_profile(request: Request):
 
     # Prepare trimmed down object for user details
     final_user_details = {}
+    print(user_details)
     for key in REQUIRED_DETAILS_KEYS:
         final_user_details[key] = user_details[key]
 
