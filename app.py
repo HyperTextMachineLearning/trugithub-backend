@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request
 import requests
 import json
 from fastapi.middleware.cors import CORSMiddleware
+import os
 
 app = FastAPI()
 
@@ -16,7 +17,7 @@ app.add_middleware(
 )
 
 
-token = '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'
+token = os.getenv('github_API_key')
 
 
 @app.get("/profile/")
