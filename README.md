@@ -65,7 +65,7 @@ uvicorn app:app --reload
 
 Following assumptions are made and are to be followed when running the project:
 
-- There is only *ONE* endpoint namely, `http://localhost:8000/profile/`.
+- There is only *ONE* endpoint, namely, `http://localhost:8000/profile/`.
 - To this endpoint you can add *ONE* or *TWO* query parameters:
     - *ONE* being `username`, say, `http://localhost:8000/profile/?username=johnpapa`
         - Usernames not following Github's naming conventions are dealt with at the front-end itself; hence no use trying to pass such a username here.
